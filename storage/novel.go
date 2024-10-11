@@ -2,6 +2,7 @@ package storage
 
 import (
 	"go.uber.org/zap"
+	"gorm.io/gorm/clause"
 	"novel_backend/global"
 	"novel_backend/model"
 )
@@ -20,7 +21,10 @@ func newNovelStorage() INovelStorage {
 }
 
 func (n novelStorage) UpsertOriginNovel(bookID int64, chapterID int64, originTitle string, originContent string) (err error) {
-	err = global.DB.Create(&model.Novel{
+	err = global.DB.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "book_id"}, {Name: "chapter_id"}},
+		DoNothing: true,
+	}).Create(&model.Novel{
 		BookID:               bookID,
 		ChapterID:            chapterID,
 		ChapterOriginTitle:   originTitle,
