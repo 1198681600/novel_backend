@@ -2,6 +2,7 @@ package web
 
 import (
 	"net/http"
+
 	"novel_backend/define"
 	"novel_backend/service"
 )
@@ -9,6 +10,9 @@ import (
 type (
 	INovelController interface {
 		UpsertOriginNovel(w http.ResponseWriter, r *http.Request)
+		GetOriginNovel(w http.ResponseWriter, r *http.Request)
+		DeleteOriginNovel(w http.ResponseWriter, r *http.Request)
+		ListOriginNovels(w http.ResponseWriter, r *http.Request)
 	}
 
 	novelController struct {
@@ -22,24 +26,80 @@ func newNovelController(NovelService service.INovelService) INovelController {
 	}
 }
 
-func (c novelController) UpsertOriginNovel(w http.ResponseWriter, req *http.Request) {
-	// 创建一个请求体的实例
-	var request define.UpsertOriginNovelRequest
-
-	// 解析请求体
-	if err := ParseRequest(req, w, &request); err != nil {
+func (c novelController) UpsertOriginNovel(w http.ResponseWriter, r *http.Request) {
+	var req define.UpsertOriginNovelRequest
+	if err := ParseRequest(r, w, &req); err != nil {
 		return
 	}
 
-	// 调用服务层的方法
-	if err := c.NovelService.UpsertOriginNovel(request); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	err := c.NovelService.UpsertOriginNovel(req)
+	if err != nil {
+		SendJSONResponse(w, http.StatusInternalServerError, define.UpsertOriginNovelResponse{
+			BaseResponse: define.BaseResponse{Code: http.StatusInternalServerError, Message: err.Error()},
+		})
 		return
 	}
 
-	// 创建一个响应体的实例
-	response := define.UpsertOriginNovelResponse{}
+	SendJSONResponse(w, http.StatusOK, define.UpsertOriginNovelResponse{
+		BaseResponse: define.BaseResponse{Code: http.StatusOK, Message: "Success"},
+	})
+}
 
-	// 发送 JSON 响应
-	SendJSONResponse(w, http.StatusOK, response)
+func (c novelController) GetOriginNovel(w http.ResponseWriter, r *http.Request) {
+	var req define.GetOriginNovelRequest
+	if err := ParseRequest(r, w, &req); err != nil {
+		return
+	}
+
+	novel, err := c.NovelService.GetOriginNovel(req.BookID, req.ChapterID)
+	if err != nil {
+		SendJSONResponse(w, http.StatusInternalServerError, define.GetOriginNovelResponse{
+			BaseResponse: define.BaseResponse{Code: http.StatusInternalServerError, Message: err.Error()},
+		})
+		return
+	}
+
+	SendJSONResponse(w, http.StatusOK, define.GetOriginNovelResponse{
+		BaseResponse: define.BaseResponse{Code: http.StatusOK, Message: "Success"},
+		Data:         novel,
+	})
+}
+
+func (c novelController) DeleteOriginNovel(w http.ResponseWriter, r *http.Request) {
+	var req define.DeleteOriginNovelRequest
+	if err := ParseRequest(r, w, &req); err != nil {
+		return
+	}
+
+	err := c.NovelService.DeleteOriginNovel(req.BookID, req.ChapterID)
+	if err != nil {
+		SendJSONResponse(w, http.StatusInternalServerError, define.DeleteOriginNovelResponse{
+			BaseResponse: define.BaseResponse{Code: http.StatusInternalServerError, Message: err.Error()},
+		})
+		return
+	}
+
+	SendJSONResponse(w, http.StatusOK, define.DeleteOriginNovelResponse{
+		BaseResponse: define.BaseResponse{Code: http.StatusOK, Message: "Success"},
+	})
+}
+
+func (c novelController) ListOriginNovels(w http.ResponseWriter, r *http.Request) {
+	var req define.ListOriginNovelsRequest
+	if err := ParseRequest(r, w, &req); err != nil {
+		return
+	}
+
+	novels, err := c.NovelService.ListOriginNovels(req.BookID, req.Page, req.PageSize)
+	if err != nil {
+		SendJSONResponse(w, http.StatusInternalServerError, define.ListOriginNovelsResponse{
+			BaseResponse: define.BaseResponse{Code: http.StatusInternalServerError, Message: err.Error()},
+		})
+		return
+	}
+
+	SendJSONResponse(w, http.StatusOK, define.ListOriginNovelsResponse{
+		BaseResponse: define.BaseResponse{Code: http.StatusOK, Message: "Success"},
+		Data:         novels,
+	})
 }

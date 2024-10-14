@@ -8,10 +8,12 @@ import (
 
 var (
 	NovelController INovelController
+	BookController  IBookController
 )
 
 func init() {
 	NovelController = newNovelController(service.NovelService)
+	BookController = newBookController(service.BookService)
 }
 
 // ParseRequest 是一个通用方法，用于解析请求体为指定的结构体
