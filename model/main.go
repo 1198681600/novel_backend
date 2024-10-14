@@ -9,6 +9,7 @@ import (
 func RegisterTables() {
 	err := global.DB.AutoMigrate(
 		Novel{},
+		Book{},
 	)
 	if err != nil {
 		zap.L().Error("register table failed", zap.Error(err))
