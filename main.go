@@ -76,12 +76,15 @@ func GetGinHandler() http.Handler {
 	return engine.Handler()
 }
 
-func httpWrapper(f func(w http.ResponseWriter, r *http.Request)) func(c *gin.Context) {
-	return func(c *gin.Context) {
-		f(c.Writer, c.Request)
-	}
-}
-
 func RegisterGinHandler(engine *gin.Engine) {
-	engine.POST("/novel/upsert_origin_novel", httpWrapper(web.NovelController.UpsertOriginNovel))
+	api := engine.Group("/api")
+	{
+		novelGroup := api.Group("/novel")
+		web.RegisterNovelRoutes(novelGroup)
+
+		bookGroup := api.Group("/book")
+		web.RegisterBookRoutes(bookGroup)
+
+		// Add other route groups here as needed
+	}
 }
