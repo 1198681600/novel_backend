@@ -34,7 +34,7 @@ func (c bookController) CreateBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	book, err := c.BookService.CreateBook(req.Title, req.IsFinish, req.Author)
+	book, err := c.BookService.CreateBook(req.Title, req.IsFinish, req.Author, req.Image, req.Introduction, req.Category, req.Metadata)
 	if err != nil {
 		SendJSONResponse(w, http.StatusInternalServerError, define.CreateBookResponse{
 			BaseResponse: define.BaseResponse{Code: http.StatusInternalServerError, Message: err.Error()},

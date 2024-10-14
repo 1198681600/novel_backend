@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"encoding/json"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"novel_backend/global"
@@ -9,7 +10,7 @@ import (
 
 type (
 	IBookStorage interface {
-		CreateBook(title string, isFinish bool, author string) (*model.Book, error)
+		CreateBook(title string, isFinish bool, author string, image string, introduction string, category model.Category, metadata map[string]string) (*model.Book, error)
 		GetBook(id int64) (*model.Book, error)
 		UpdateBook(id int64, title string, isFinish bool, author string) error
 		DeleteBook(id int64) error
@@ -24,11 +25,18 @@ func newBookStorage() IBookStorage {
 	return &bookStorage{}
 }
 
-func (b bookStorage) CreateBook(title string, isFinish bool, author string) (*model.Book, error) {
+func (b bookStorage) CreateBook(title string, isFinish bool, author string, image string, introduction string, category model.Category, metadata map[string]string) (*model.Book, error) {
+	data, _ := json.Marshal(metadata)
 	book := &model.Book{
-		Title:    title,
-		IsFinish: isFinish,
-		Author:   author,
+		Title:        title,
+		IsFinish:     isFinish,
+		Author:       author,
+		Category:     category,
+		Introduction: introduction,
+		Image:        image,
+		BaseModel: model.BaseModel{
+			Metadata: data,
+		},
 	}
 	err := global.DB.Create(book).Error
 	if err != nil {

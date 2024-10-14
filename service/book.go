@@ -9,7 +9,7 @@ import (
 
 type (
 	IBookService interface {
-		CreateBook(title string, isFinish bool, author string) (*model.Book, error)
+		CreateBook(title string, isFinish bool, author string, image string, introduction string, category model.Category, metadata map[string]string) (*model.Book, error)
 		GetBook(id int64) (*model.Book, error)
 		UpdateBook(id int64, title string, isFinish bool, author string) error
 		DeleteBook(id int64) error
@@ -28,8 +28,8 @@ func newBookService(bookStorage storage.IBookStorage) IBookService {
 	}
 }
 
-func (b bookService) CreateBook(title string, isFinish bool, author string) (*model.Book, error) {
-	book, err := b.bookStorage.CreateBook(title, isFinish, author)
+func (b bookService) CreateBook(title string, isFinish bool, author string, image string, introduction string, category model.Category, metadata map[string]string) (*model.Book, error) {
+	book, err := b.bookStorage.CreateBook(title, isFinish, author, image, introduction, category, metadata)
 	if err != nil {
 		global.Logger.Error("CreateBook error", zap.Error(err))
 		return nil, err

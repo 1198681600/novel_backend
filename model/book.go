@@ -6,6 +6,7 @@ type Book struct {
 	Author       string   `gorm:"not null" `
 	Category     Category `gorm:"not null" `
 	Introduction string   `gorm:"not null" `
+	Image        string   `gorm:"not null" `
 	BaseModel
 }
 
