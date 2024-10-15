@@ -59,6 +59,6 @@ func gormPgSql(config *gormPgSqlConfig) *gorm.DB {
 func gormConfig() *gorm.Config {
 	return &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
-		Logger:                                   logger.Default.LogMode(logger.Info),
+		Logger:                                   logger.Default.LogMode(logger.Error),
 	}
 }
