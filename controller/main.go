@@ -25,18 +25,18 @@ func httpWrapper(f func(w http.ResponseWriter, r *http.Request)) func(c *gin.Con
 
 func RegisterBookRoutes(router *gin.RouterGroup) {
 	router.POST("/create", httpWrapper(BookController.CreateBook))
-	router.GET("/get", httpWrapper(BookController.GetBook))
-	router.PUT("/update", httpWrapper(BookController.UpdateBook))
-	router.DELETE("/delete", httpWrapper(BookController.DeleteBook))
-	router.GET("/list", httpWrapper(BookController.ListBooks))
-	router.GET("/search", httpWrapper(BookController.SearchBooks))
+	router.POST("/get", httpWrapper(BookController.GetBook))
+	router.POST("/update", httpWrapper(BookController.UpdateBook))
+	router.POST("/delete", httpWrapper(BookController.DeleteBook))
+	router.POST("/list", httpWrapper(BookController.ListBooks))
+	router.POST("/search", httpWrapper(BookController.SearchBooks))
 }
 
 func RegisterNovelRoutes(router *gin.RouterGroup) {
 	router.POST("/upsert", httpWrapper(NovelController.UpsertOriginNovel))
-	router.GET("/get", httpWrapper(NovelController.GetOriginNovel))
-	router.DELETE("/delete", httpWrapper(NovelController.DeleteOriginNovel))
-	router.GET("/list", httpWrapper(NovelController.ListOriginNovels))
+	router.POST("/get", httpWrapper(NovelController.GetOriginNovel))
+	router.POST("/delete", httpWrapper(NovelController.DeleteOriginNovel))
+	router.POST("/list", httpWrapper(NovelController.ListOriginNovels))
 }
 
 // ParseRequest 是一个通用方法，用于解析请求体为指定的结构体
