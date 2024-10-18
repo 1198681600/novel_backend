@@ -71,20 +71,20 @@ func CorsHandler() gin.HandlerFunc {
 
 func AuthTokenMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// 获取请求头中的 token
-		token := c.GetHeader("X-Token") // 你可以根据实际情况使用 Authorization 或其他字段
-
-		// 固定的预期 token，可以从配置文件读取
-		expectedToken := "345kjcasdhvk120938kmdnbflkjashdf11fds2*((*"
-
-		// 校验 token 是否一致
-		if token != expectedToken {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"message": "Invalid or missing token",
-			})
-			c.Abort() // 终止请求处理
-			return
-		}
+		//// 获取请求头中的 token
+		//token := c.GetHeader("X-Token") // 你可以根据实际情况使用 Authorization 或其他字段
+		//
+		//// 固定的预期 token，可以从配置文件读取
+		//expectedToken := "345kjcasdhvk120938kmdnbflkjashdf11fds2*((*"
+		//
+		//// 校验 token 是否一致
+		//if token != expectedToken {
+		//	c.JSON(http.StatusUnauthorized, gin.H{
+		//		"message": "Invalid or missing token",
+		//	})
+		//	c.Abort() // 终止请求处理
+		//	return
+		//}
 
 		// Token 校验通过，继续处理请求
 		c.Next()
