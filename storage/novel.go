@@ -64,7 +64,7 @@ func (n novelStorage) DeleteOriginNovel(bookID int64, chapterID int64) error {
 
 func (n novelStorage) ListOriginNovels(bookID int64) ([]string, error) {
 	var novels []string
-	err := global.DB.Where("book_id = ?", bookID).
+	err := global.DB.Table("novels").Where("book_id = ?", bookID).
 		Order("chapter_id ASC").
 		Select("chapter_origin_title").
 		Find(&novels).Error
