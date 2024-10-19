@@ -90,7 +90,7 @@ func (c novelController) ListOriginNovels(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	novels, err := c.NovelService.ListOriginNovels(req.BookID, req.Page, req.PageSize)
+	novels, err := c.NovelService.ListOriginNovels(req.BookID)
 	if err != nil {
 		SendJSONResponse(w, http.StatusInternalServerError, define.ListOriginNovelsResponse{
 			BaseResponse: define.BaseResponse{Code: http.StatusInternalServerError, Message: err.Error()},

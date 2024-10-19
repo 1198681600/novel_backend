@@ -38,12 +38,10 @@ type DeleteOriginNovelResponse struct {
 }
 
 type ListOriginNovelsRequest struct {
-	BookID   int64 `json:"book_id"`
-	Page     int   `json:"page"`
-	PageSize int   `json:"page_size"`
+	BookID int64 `json:"book_id"`
 }
 
 type ListOriginNovelsResponse struct {
 	BaseResponse
-	Data []model.Novel `json:"data"`
+	Data []string `json:"data"`
 }

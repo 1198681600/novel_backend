@@ -13,7 +13,7 @@ type (
 		UpsertOriginNovel(bookID int64, chapterID int64, originTitle string, originContent string) error
 		GetOriginNovel(bookID int64, chapterID int64) (*model.Novel, error)
 		DeleteOriginNovel(bookID int64, chapterID int64) error
-		ListOriginNovels(bookID int64, limit, offset int) ([]model.Novel, error)
+		ListOriginNovels(bookID int64) ([]string, error)
 	}
 
 	novelStorage struct {
@@ -62,16 +62,15 @@ func (n novelStorage) DeleteOriginNovel(bookID int64, chapterID int64) error {
 	return err
 }
 
-func (n novelStorage) ListOriginNovels(bookID int64, limit, offset int) ([]model.Novel, error) {
-	var novels []model.Novel
+func (n novelStorage) ListOriginNovels(bookID int64) ([]string, error) {
+	var novels []string
 	err := global.DB.Where("book_id = ?", bookID).
 		Order("chapter_id ASC").
-		Limit(limit).
-		Offset(offset).
+		Select("chapter_origin_title").
 		Find(&novels).Error
 
 	if err != nil {
-		global.Logger.Error("ListOriginNovels error", zap.Error(err), zap.Int64("bookID", bookID), zap.Int("limit", limit), zap.Int("offset", offset))
+		global.Logger.Error("ListOriginNovels error", zap.Error(err), zap.Int64("bookID", bookID))
 		return nil, err
 	}
 	return novels, nil

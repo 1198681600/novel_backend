@@ -13,7 +13,7 @@ type (
 		UpsertOriginNovel(req define.UpsertOriginNovelRequest) error
 		GetOriginNovel(bookID, chapterID int64) (*model.Novel, error)
 		DeleteOriginNovel(bookID, chapterID int64) error
-		ListOriginNovels(bookID int64, page, pageSize int) ([]model.Novel, error)
+		ListOriginNovels(bookID int64) ([]string, error)
 	}
 
 	novelService struct {
@@ -56,11 +56,10 @@ func (n novelService) DeleteOriginNovel(bookID, chapterID int64) error {
 	return nil
 }
 
-func (n novelService) ListOriginNovels(bookID int64, page, pageSize int) ([]model.Novel, error) {
-	offset := (page - 1) * pageSize
-	novels, err := n.novelStorage.ListOriginNovels(bookID, pageSize, offset)
+func (n novelService) ListOriginNovels(bookID int64) ([]string, error) {
+	novels, err := n.novelStorage.ListOriginNovels(bookID)
 	if err != nil {
-		global.Logger.Error("ListOriginNovels error", zap.Error(err), zap.Int64("bookID", bookID), zap.Int("page", page), zap.Int("pageSize", pageSize))
+		global.Logger.Error("ListOriginNovels error", zap.Error(err), zap.Int64("bookID", bookID))
 		return nil, err
 	}
 	return novels, nil
